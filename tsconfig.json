@@ -9,12 +9,16 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     // "verbatimModuleSyntax": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "~/*": ["./src/*"],
+      "#/*": ["./src/*"]
+    }
   },
-  "include": ["./src"]
+  "include": ["./src", "./server.ts"]
 }

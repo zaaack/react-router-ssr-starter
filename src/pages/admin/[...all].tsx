@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // 导出一个默认的React函数组件，命名为Index
 export default function Admin() {
   useEffect(() => {
-    import('./_components/render').then((mod) => {
+    import('./_client/render').then((mod) => {
       mod.renderAdmin();
     })
   },[])

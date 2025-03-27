@@ -2,7 +2,7 @@
   "name": "ssr-data-router",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node server.js",
+    "dev": "cross-env NODE_ENV=development tsx server.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client --ssrManifest",
     "build:server": "vite build --ssr src/entry.server.tsx --outDir dist/server",
@@ -19,7 +19,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^7.4.0",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.4.0",
+    "superjson": "^2.2.2",
+    "typed-rpc": "^6.1.1"
   },
   "devDependencies": {
     "@ant-design/icons": "5.0.1",
@@ -32,18 +34,21 @@
     "@refinedev/react-router-v6": "^4.6.0",
     "@refinedev/simple-rest": "^5.0.8",
     "@rollup/plugin-replace": "^5.0.2",
+    "@types/compression": "^1.7.5",
     "@types/express": "^4.17.16",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.16.16",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.0.1",
     "antd": "^5.17.0",
+    "express-sse-ts": "^1.0.2",
     "i18next": "^20.1.0",
     "i18next-browser-languagedetector": "^6.1.1",
     "i18next-xhr-backend": "^3.2.2",
     "react-i18next": "^15.4.1",
     "typescript": "^4.9.5",
-    "vite": "https://pkg.pr.new/vitejs/rolldown-vite/vite@c90496e"
+    "vite": "https://pkg.pr.new/vitejs/rolldown-vite/vite@c90496e",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }

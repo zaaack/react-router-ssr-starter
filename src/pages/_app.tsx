@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router'
 
-import { Link, useModals, useNavigate, useParams } from '../router.gen'
+import { Link, useModals, useNavigate, useParams } from '#/router.gen'
 
 export default function App() {
 

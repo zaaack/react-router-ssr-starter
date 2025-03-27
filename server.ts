@@ -1,20 +1,20 @@
-let path = require("path");
-let fsp = require("fs/promises");
-let express = require("express");
+import path from "path";
+import fsp from "fs/promises"
+import express from "express"
+import type { ViteDevServer } from "vite";
+import { ApiRouter } from "./src/express-routes/router";
+import compression from 'compression'
 
 let root = process.cwd();
 let isProduction = process.env.NODE_ENV === "production";
 
-function resolve(p) {
+function resolve(p: string) {
   return path.resolve(__dirname, p);
 }
 
 async function createServer() {
   let app = express();
-  /**
-   * @type {import('vite').ViteDevServer}
-   */
-  let vite;
+  let vite: ViteDevServer;
 
   if (!isProduction) {
     vite = await import("vite")
@@ -22,9 +22,11 @@ async function createServer() {
 
     app.use(vite.middlewares);
   } else {
-    app.use(require("compression")());
+    app.use(compression());
     app.use(express.static(resolve("dist/client")));
   }
+
+  app.use("/api", ApiRouter);
 
   app.use("*", async (req, res) => {
     let url = req.originalUrl;
@@ -53,16 +55,20 @@ async function createServer() {
         return res.status(200).end(html);
       } catch (e) {
         if (e instanceof Response && e.status >= 300 && e.status <= 399) {
-          return res.redirect(e.status, e.headers.get("Location"));
+          return res.location(e.headers.get("Location") as string);
         }
         throw e;
       }
     } catch (error) {
-      if (!isProduction) {
-        vite.ssrFixStacktrace(error);
+      if (error instanceof Error) {
+        if (!isProduction) {
+          vite.ssrFixStacktrace(error);
+        }
+        console.log(error.stack);
+        res.status(500).end(error.message+'\n'+error.stack);
+      } else {
+        res.status(500).end("Internal Server Error："+error);
       }
-      console.log(error.stack);
-      res.status(500).end(error.stack);
     }
   });
 
