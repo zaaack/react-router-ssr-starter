@@ -1,20 +1,18 @@
 import path from "path";
 import fsp from "fs/promises"
 import express from "express"
-import type { ViteDevServer } from "vite";
-import { ApiRouter } from "./src/express-routes/router";
 import compression from 'compression'
 
 let root = process.cwd();
-let isProduction = process.env.NODE_ENV === "production";
+let isProduction = process.env.NODE_ENV !== "development";
 
-function resolve(p: string) {
-  return path.resolve(__dirname, p);
+function resolve(p) {
+  return path.resolve(import.meta.dirname, p);
 }
 
 async function createServer() {
   let app = express();
-  let vite: ViteDevServer;
+  let vite;
 
   if (!isProduction) {
     vite = await import("vite")
@@ -23,10 +21,17 @@ async function createServer() {
     app.use(vite.middlewares);
   } else {
     app.use(compression());
-    app.use(express.static(resolve("dist/client")));
+    app.use('/assets',express.static(resolve("dist/client/assets")));
   }
 
-  app.use("/api", ApiRouter);
+  let entryServer
+  if (isProduction) {
+    entryServer = await import(resolve("dist/server/entry.server.js"));
+  } else {
+    entryServer = await vite.ssrLoadModule("src/entry.server.tsx");
+  }
+
+  app.use("/api", entryServer.ApiRouter);
 
   app.use("*", async (req, res) => {
     let url = req.originalUrl;
@@ -37,15 +42,13 @@ async function createServer() {
       if (!isProduction) {
         template = await fsp.readFile(resolve("index.html"), "utf8");
         template = await vite.transformIndexHtml(url, template);
-        render = await vite
-          .ssrLoadModule("src/entry.server.tsx")
-          .then((m) => m.render);
+        render = entryServer.render;
       } else {
         template = await fsp.readFile(
           resolve("dist/client/index.html"),
           "utf8"
         );
-        render = require(resolve("dist/server/entry.server.js")).render;
+        render = entryServer.render;
       }
 
       try {
@@ -55,7 +58,7 @@ async function createServer() {
         return res.status(200).end(html);
       } catch (e) {
         if (e instanceof Response && e.status >= 300 && e.status <= 399) {
-          return res.location(e.headers.get("Location") as string);
+          return res.location(e.headers.get("Location"));
         }
         throw e;
       }

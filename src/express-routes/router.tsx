@@ -1,14 +1,14 @@
 import { handleRpc } from "typed-rpc/server";
 import transcoder from "superjson";
 import express,{Router} from 'express'
-import { createRcpRouter, type RpcRouter } from "../modules/service";
-import SSE from 'express-sse-ts'
-export const sse = new SSE()
+import { type RpcRouter } from "../modules/service";
 
+
+  // for issue test
+const { createRcpRouter } = await import("../modules/service");
 
 export const ApiRouter = Router()
-  .use("*", express.json())
-  .use("*", async (request, response, next) => {
+  .use("/api", express.json(), async (request, response, next) => {
     let body = await request.body;
     let type = request.path.split("/").pop()! as keyof RpcRouter;
     const service = createRcpRouter();
@@ -17,4 +17,3 @@ export const ApiRouter = Router()
     });
     response.json(res);
   })
-  .use("/sse", sse.init);

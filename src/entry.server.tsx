@@ -8,7 +8,12 @@ import {
 } from "react-router";
 // import { routes } from "./routes";
 import { routes } from '@generouted/react-router'
+export { ApiRouter } from "./express-routes/router";
 
+var PRESERVED = import.meta.glob("/src/pages/(_app|404).{jsx,tsx}", { eager: true });
+var MODALS = import.meta.glob("/src/pages/**/[+]*.{jsx,tsx}", { eager: true });
+var ROUTES = import.meta.glob(["/src/pages/**/[\\w[-]*.{jsx,tsx,mdx}", "!/src/pages/**/(_!(layout)*(/*)?|_app|404)*"], { eager: true });
+console.log("PRESERVED, MODALS, ROUTES", PRESERVED, MODALS, ROUTES);
 
 export async function render(
   request: express.Request,

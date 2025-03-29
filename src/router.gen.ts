@@ -3,7 +3,7 @@
 
 import { components, hooks, utils } from "@generouted/react-router/client";
 
-export type Path = `/` | `/about` | `/admin/*` | `/login` | `/posts` | `/posts/:id` | `/posts/:id/:pid?` | `/posts/:id/deep` | `/register` | `/splat/*`;
+export type Path = `/` | `/about` | `/admin` | `/admin/*` | `/login` | `/posts` | `/posts/:id` | `/posts/:id/:pid?` | `/posts/:id/deep` | `/register` | `/splat/*`;
 
 export type Params = {
   "/admin/*": { "*": string };

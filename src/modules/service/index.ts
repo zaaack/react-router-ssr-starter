@@ -1,4 +1,5 @@
-import { UserService } from "~/modules/service/user-service"
+// import { UserService } from "~/modules/service/user-service"
+import { UserService } from "./user-service"
 
 export function createRcpRouter() {
   return {
